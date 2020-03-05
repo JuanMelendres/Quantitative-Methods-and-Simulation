@@ -10,4 +10,4 @@ while len(list) == len(set(list)) :
     y = (len(x) - length)/2
     rnd = int(x[y:y+length])
     list.append(rnd)
-    print rnd
+    print(rnd)
