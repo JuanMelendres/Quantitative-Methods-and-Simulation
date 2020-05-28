@@ -17,30 +17,22 @@ infected = int(input("Start of infected: "))
 recovered = 0
 # Everyone is susceptible to infection initially.
 susceptible = N - infected - recovered
-# Contact rate beta and recovery rate gamma, (in 1/days).
-beta = 0.25
-gamma = 1/10
+# Contact rate beta and recovery rate gamma (in 1/days).
+beta = 0.15
+gamma = 1./20
 # A grid of time points (in days)
-t = numpy.linspace(0, 160, 160)
+t = numpy.linspace(0, 180, 180)
 
 #-- Start population ---
 def start_population(time_period, pop_initial):
-    # this is basic model of human population growth. 
-    # It assumes an initial starting population distributed equally among genders within a certain
-    # initial age limit. It also assumes that people die once they hit a certain age immedialty 
-    # and there is no death distribution. The probability of
-    # having children reduces with increasing number of children with the maximum limit set at 6, a hard stop.
-
     pop = []
-    #pop_initial = 2
-    init_age_limit = 0
-    age_of_dying = 75
+    init_age_limit = 2
+    age_of_dying = 80
     start_child_birth_age = 24
     end_child_birth_age = 45
-
     # the way attributes are arranged are age, gender, number of children, dead
     # defining intial population of N(pop_initial) kids
-
+    
     while True:
         n_m = 0
         n_f = 0
@@ -194,7 +186,7 @@ right_frame = tk.Frame(root, bg = '#C0C0C0', bd = 1.5)
 right_frame.place(relx = 0.3, rely = 0.05, relwidth = 0.65, relheight = 0.9)
 #---------------
 
-#--- Buttons and text fields ---
+#--- Buttons ---
 RH = 0.19
 
 B0 = tk.Button(left_frame, text = "Population", command = B0f)
@@ -202,13 +194,6 @@ B0.place(relwidth = 0.2, relheight = 0.05)
 
 B1 = tk.Button(left_frame, text = "Epidemic", command = B1f)
 B1.place(rely = (RH * 0.54), relwidth = 0.2, relheight = 0.05)
-
-#text_pop = tk.Entry(left_frame)
-#tk.Label(left_frame, text = "Star number of population:").place(rely = 1.7 * RH * 0.54)
-#text_pop.place(rely = 2.2 * (RH * 0.54))
-#star_num = text_pop.Entry.g
-#N = int(star_num)
-
 #------------
 
 #--- Add Plot ---
