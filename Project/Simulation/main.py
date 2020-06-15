@@ -6,9 +6,9 @@ import matplotlib.pyplot as plt
 plt.style.use('ggplot')
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-# start population 
+# Start population 
 start = int(input("Start population: "))
-# Total population, N.
+# Total population for Virus simulation.
 N = 140000
 # Number of years.
 years = int(input("Number of years: "))
@@ -20,7 +20,7 @@ susceptible = N - infected - recovered
 # Contact rate beta and recovery rate gamma (in 1/days).
 beta = 0.15
 gamma = 1./20
-# A grid of time points (in days)
+# Grid of time points (in days)
 t = numpy.linspace(0, 180, 180)
 
 #-- Start population ---
@@ -28,59 +28,46 @@ def start_population(time_period, pop_initial):
     pop = []
     init_age_limit = 2
     age_of_dying = 80
-    start_child_birth_age = 24
-    end_child_birth_age = 45
-    # the way attributes are arranged are age, gender, number of children, dead
-    # defining intial population of N(pop_initial) kids
+    start_birth_age = 24
+    end_birth_age = 45
     
     while True:
-        n_m = 0
-        n_f = 0
+        num_men = 0
+        num_wom = 0
         pop = []
         for i in range(0, pop_initial):
             age = int(random.random() * init_age_limit) + 1
             gender = random.random()
             if gender < .5:
                 gender = 0
-                n_m = n_m + 1
+                num_men = num_men + 1
             else:
                 gender = 1
-                n_f = n_f + 1
+                num_wom = num_wom + 1
             ch_num = 0
             dead = 0
-            buf = [age,gender, ch_num, dead]
+            buf = [age, gender, ch_num, dead]
             pop.append(buf)
-        if n_m == n_f:
+        if num_men == num_wom:
             break
 
-    # evolution criteria are people have children after the age of 18 till 40, 
-    # probability of having children drastically reduces after 2 and life expectancy is 80.
-    # time step is 1 year
-    # first_ch_prob = .7
-    # second_child_prob = .5
-    # third_child_prob = .1
-    # fourth_child_prob = .01
     birthing_prob = [.7, .5, .1, .01, .0001, .0000001, .000000001]
 
     alive_pop_vs_time = []
     tot_pop_vs_time = []
     number_of_child = []
-
-    #plt.ion()
     ax.clear()
 
     for t in range(time_period):
-        n_pop = 0
-        n_ch = 0
+        num_pop = 0
+        num_ch = 0
         for i in pop:
             if i[3] == 1:
                 continue
             i[0] = i[0] + 1
-            # checking age for birthing and number of children assuming no one has more than 7
-            if i[0] >= start_child_birth_age and i[0] <= end_child_birth_age and i[2] < 7:
-                #roll the dice
+            # Checking age for birthing and number of children assuming no one has more than 7
+            if i[0] >= start_birth_age and i[0] <= end_birth_age and i[2] < 7:
                 if random.random() < birthing_prob[i[2]]:
-                    # add a human baby based on outcome
                     i[2] = i[2] + 1
                     age = 1
                     gender = random.random()
@@ -90,31 +77,25 @@ def start_population(time_period, pop_initial):
                         gender = 1
                     ch_num = 0
                     dead = 0
-                    buf = [age,gender,ch_num,dead]
+                    buf = [age, gender, ch_num, dead]
                     pop.append(buf)
-                    #selecting the mate
+                    # Selecting the mate
                     partner = pop[int(random.random() * len(pop))]
-                    # making sure the mate is of teh opposite sex
+                    # Making sure the mate is of teh opposite sex
                     if i[2] != partner[2] and partner[0] >= 18 and partner[0] <= 40:
-                        # increase the numerb of child of the mate by one
+                        # Increase the num of child of the mate by one
                         partner[2] = partner[2] + 1
 
             if i[0] > age_of_dying:
                 i[3] = 1
             if i[3] == 0:
-                n_pop = n_pop + 1
+                num_pop = num_pop + 1
             if i[0] < 18:
-                n_ch = n_ch + 1
+                num_ch = num_ch + 1
 
-        alive_pop_vs_time.append(n_pop)
+        alive_pop_vs_time.append(num_pop)
         tot_pop_vs_time.append(len(pop))
-        number_of_child.append(n_ch)
-        #plt.plot(alive_pop_vs_time)
-        #plt.pause(0.05)
-        #plt.xlabel('Time (Years)')
-        #plt.ylabel('Population')
-        #plt.plot(tot_pop_vs_time)
-        #plt.plot(alive_pop_vs_time,'r')
+        number_of_child.append(num_ch)
 
     # Red Line
     ax.plot(alive_pop_vs_time)
@@ -127,7 +108,6 @@ def start_population(time_period, pop_initial):
     ax.set_ylabel('$Population$')
     ax.set_title('$Population Growth$')
     line.draw()
-    return n_pop
 #------------
 
 #-- Virus population ---
@@ -158,7 +138,6 @@ def virus_simulation():
     ax.set_ylabel('$Population$')
     ax.set_title('$Epidemic$')
     line.draw()
-    #print(S + I + R)
 #------------
 
 def B0f():
@@ -204,4 +183,5 @@ line = FigureCanvasTkAgg(figure, right_frame)
 line.get_tk_widget().pack(side = tk.LEFT, fill = tk.BOTH, expand = 1)
 #----------------------
 
-root.mainloop()
+if __name__ == '__main__':
+    root.mainloop()
